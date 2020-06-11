@@ -1,5 +1,6 @@
 export enum MathSymbolEnum {
     none,
+    number,
     plus,
     minus,
     multiply,
