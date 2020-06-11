@@ -43,9 +43,7 @@ const reverseSign = (numStr: string) => {
         return "-" + numStr;
     }
 }
-// const reverseSign = (num: number) => {
-//     return num * -1
-// }
+
 
 const filterZeroHead = (numStr: string) => {
     return numStr.replace(/^0+/g, "");
@@ -60,6 +58,8 @@ const roundPointInt = (num: number) => {
     return Math.round(num * size) / size;
 }
 
+
+
 const $$ = {
     add,
     minus,
@@ -69,7 +69,7 @@ const $$ = {
     reverseSign,
     filterZeroHead,
     strip,
-    abandonPointInt: roundPointInt
+    roundPointInt
 }
 
 export default $$

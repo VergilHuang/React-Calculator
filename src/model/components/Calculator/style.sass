@@ -1,3 +1,4 @@
+@import src/assets/styles/theme_color
 
 .calculator-container
     width: 360px
@@ -13,11 +14,26 @@
         flex-direction: column-reverse
         .result-content
             font-size: 3.8rem
-            color: #fff
+            color: $white
             transition: font-size .1s linear
     .calculator-btn-row
         display: flex
         justify-content: space-around
         flex-wrap: nowrap
         padding: 7px 12px
+
+        .gray-btn-theme
+            background: #AFAFAF
+            color: #333
+        .blue-btn-theme
+            background: #3091FD
+            color: #fff
+        .dark-btn-theme
+            background: #333
+            color: #fff
+
+        .hl
+            &:focus
+                background-color: $white
+                color: $sea-blue
 

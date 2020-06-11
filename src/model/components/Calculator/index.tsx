@@ -24,9 +24,6 @@ const Calculator: FC<Props> = (props) => {
     const [symbol, setSymbol] = useState<MathSymbolEnum>(MathSymbolEnum.none);
     const [flag, setFlag] = useState(false);
     const [showType, setShowType] = useState<"calc" | "cur">("cur")
-    const grayBtnTheme = { bgColor: "#AFAFAF", textColor: "#333" }
-    const blueBtnTheme = { bgColor: "#3091FD", textColor: "#fff" }
-    const darkBtnTheme = { bgColor: "#333", textColor: "#fff" }
 
     //數字點擊
     const handleNumClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, numStr: string) => {
@@ -107,9 +104,8 @@ const Calculator: FC<Props> = (props) => {
     const hanldeEqual = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
 
+        let result = fixNumber(eval(calculation.concat(curVal).join("")));
 
-
-        const result = eval(calculation.concat(curVal).join(""));
         if (result) {
             setCalculation([result]);
             setCurVal("");
@@ -119,10 +115,19 @@ const Calculator: FC<Props> = (props) => {
         }
     }
 
+    const fixNumber = (num: number) => {
+        let _num: string | number = $$.strip($$.roundPointInt(num))
+        if (_num >= 10e8) {
+            _num = (_num as number).toExponential()
+        }
+        return _num.toString()
+    }
+
     const answer = useMemo(() => {
         if (showType === "calc") {
+            let result = fixNumber(eval(calculation.join("")))
 
-            return eval(calculation.join("")) || "0"
+            return result || "0"
         } else {
             return curVal
         }
@@ -144,33 +149,33 @@ const Calculator: FC<Props> = (props) => {
                 </span>
             </section>
             <div className="calculator-btn-row">
-                <CircleButton text="AC" backgroundColor={grayBtnTheme.bgColor} textColor={grayBtnTheme.textColor} onClick={cleanResult} />
-                <CircleButton text="+/-" backgroundColor={grayBtnTheme.bgColor} textColor={grayBtnTheme.textColor} onClick={(e) => handleCalculate(e, MathSymbolEnum.reverse)} />
-                <CircleButton text="%" backgroundColor={grayBtnTheme.bgColor} textColor={grayBtnTheme.textColor} onClick={() => { }} />
-                <CircleButton text="÷" backgroundColor={blueBtnTheme.bgColor} textColor={blueBtnTheme.textColor} onClick={(e) => handleCalculate(e, MathSymbolEnum.divide)} />
+                <CircleButton className="gray-btn-theme" text="AC" onClick={cleanResult} />
+                <CircleButton className="gray-btn-theme" text="+/-" onClick={(e) => handleCalculate(e, MathSymbolEnum.reverse)} />
+                <CircleButton className="gray-btn-theme" text="%" onClick={() => { }} />
+                <CircleButton className="blue-btn-theme hl" text="÷" onClick={(e) => handleCalculate(e, MathSymbolEnum.divide)} />
             </div>
             <div className="calculator-btn-row">
-                <CircleButton text="7" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "7")} />
-                <CircleButton text="8" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "8")} />
-                <CircleButton text="9" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "9")} />
-                <CircleButton text="X" backgroundColor={blueBtnTheme.bgColor} textColor={blueBtnTheme.textColor} onClick={(e) => handleCalculate(e, MathSymbolEnum.multiply)} />
+                <CircleButton className="dark-btn-theme" text="7" onClick={(e) => handleNumClick(e, "7")} />
+                <CircleButton className="dark-btn-theme" text="8" onClick={(e) => handleNumClick(e, "8")} />
+                <CircleButton className="dark-btn-theme" text="9" onClick={(e) => handleNumClick(e, "9")} />
+                <CircleButton className="blue-btn-theme hl" text="X" onClick={(e) => handleCalculate(e, MathSymbolEnum.multiply)} />
             </div>
             <div className="calculator-btn-row">
-                <CircleButton text="4" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "4")} />
-                <CircleButton text="5" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "5")} />
-                <CircleButton text="6" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "6")} />
-                <CircleButton text="-" backgroundColor={blueBtnTheme.bgColor} textColor={blueBtnTheme.textColor} onClick={(e) => handleCalculate(e, MathSymbolEnum.minus)} />
+                <CircleButton className="dark-btn-theme" text="4" onClick={(e) => handleNumClick(e, "4")} />
+                <CircleButton className="dark-btn-theme" text="5" onClick={(e) => handleNumClick(e, "5")} />
+                <CircleButton className="dark-btn-theme" text="6" onClick={(e) => handleNumClick(e, "6")} />
+                <CircleButton className="blue-btn-theme hl" text="-" onClick={(e) => handleCalculate(e, MathSymbolEnum.minus)} />
             </div>
             <div className="calculator-btn-row">
-                <CircleButton text="1" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "1")} />
-                <CircleButton text="2" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "2")} />
-                <CircleButton text="3" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "3")} />
-                <CircleButton text="+" backgroundColor={blueBtnTheme.bgColor} textColor={blueBtnTheme.textColor} onClick={(e) => handleCalculate(e, MathSymbolEnum.plus)} />
+                <CircleButton className="dark-btn-theme" text="1" onClick={(e) => handleNumClick(e, "1")} />
+                <CircleButton className="dark-btn-theme" text="2" onClick={(e) => handleNumClick(e, "2")} />
+                <CircleButton className="dark-btn-theme" text="3" onClick={(e) => handleNumClick(e, "3")} />
+                <CircleButton className="blue-btn-theme hl" text="+" onClick={(e) => handleCalculate(e, MathSymbolEnum.plus)} />
             </div>
             <div className="calculator-btn-row">
-                <RaiusBarButton text="0" backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, "0")} />
-                <CircleButton text="." backgroundColor={darkBtnTheme.bgColor} textColor={darkBtnTheme.textColor} onClick={(e) => handleNumClick(e, ".")} />
-                <CircleButton text="=" backgroundColor={blueBtnTheme.bgColor} textColor={blueBtnTheme.textColor} onClick={hanldeEqual} />
+                <RaiusBarButton className="dark-btn-theme" text="0" onClick={(e) => handleNumClick(e, "0")} />
+                <CircleButton className="dark-btn-theme" text="." onClick={(e) => handleNumClick(e, ".")} />
+                <CircleButton className="blue-btn-theme" text="=" onClick={hanldeEqual} />
             </div>
         </div>
     );
