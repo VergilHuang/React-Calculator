@@ -2,9 +2,15 @@
 
 .calculator-container
     width: 360px
-    margin: 8px auto
+    // margin: 8px auto
     background: rgb(11,14,28)
     background: linear-gradient(0deg, rgba(11,14,28,1) 0%, rgba(132,186,255,1) 100%)
+    box-shadow: 4px 4px 12px 1px rgba(0,0,0,0.6)
+    border-radius: 2px
+    position: absolute
+    top: 100px
+    left: 100px
+    padding: 8px 0
 
     .result-section
         height: 165px
@@ -16,6 +22,7 @@
             font-size: 3.8rem
             color: $white
             transition: font-size .1s linear
+            user-select: none
     .calculator-btn-row
         display: flex
         justify-content: space-around

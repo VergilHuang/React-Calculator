@@ -1,4 +1,4 @@
-import React, { FC, useState, useMemo } from 'react';
+import React, { FC, useState, useMemo, useRef, useEffect } from 'react';
 import "./style.sass"
 import CircleButton from '../CircleButton';
 import $$ from '../../utils/utils';
@@ -19,6 +19,7 @@ const reverseOrPercent = [MathSymbolEnum.reverse, MathSymbolEnum.percent]
 
 const Calculator: FC<Props> = (props) => {
 
+    const containerRef = useRef<any>()
     const [curVal, setCurVal] = useState<string>("0");
     const [calculation, setCalculation] = useState<string[]>([]);
     const [symbol, setSymbol] = useState<MathSymbolEnum>(MathSymbolEnum.none);
@@ -50,10 +51,8 @@ const Calculator: FC<Props> = (props) => {
                 setCalculation([...calculation, "/"])
         }
 
-
-
-        // 容許長度為９個數字，包含小數點為１０位
-        if (isIncluesDot ? val.length < 10 : val.length < 9) {
+        // 容許計算長度為９個數字，包含小數點為１０位
+        if ((numStr === "." || isIncluesDot) ? val.length < 11 : val.length < 9) {
             val += numStr
             val = $$.filterZeroHead(val)
         }
@@ -66,7 +65,7 @@ const Calculator: FC<Props> = (props) => {
 
     // AC
     const cleanResult = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
+        $$.preventDefault(e)
 
         setCurVal("0")
         setCalculation([])
@@ -74,17 +73,9 @@ const Calculator: FC<Props> = (props) => {
         setFlag(false);
     }
 
-    const handleReverse = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-
-        // if ()
-        setSymbol(MathSymbolEnum.reverse)
-        setFlag(false);
-    }
-
     // 加減乘除
     const handleCalculate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, ms: MathSymbolEnum) => {
-        e.preventDefault()
+        $$.preventDefault(e)
 
         if (addOrMinus.includes(ms)) {
             setShowType("calc")
@@ -102,9 +93,11 @@ const Calculator: FC<Props> = (props) => {
     }
 
     const hanldeEqual = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
+        $$.preventDefault(e)
 
-        let result = fixNumber(eval(calculation.concat(curVal).join("")));
+        const metrix = calculation.concat(curVal)
+        let result = eval($$.fixEvalString(metrix))
+        result = $$.fixNumber(result);
 
         if (result) {
             setCalculation([result]);
@@ -115,26 +108,30 @@ const Calculator: FC<Props> = (props) => {
         }
     }
 
-    const fixNumber = (num: number) => {
-        let _num: string | number = $$.strip($$.roundPointInt(num))
-        if (_num >= 10e8) {
-            _num = (_num as number).toExponential()
-        }
-        return _num.toString()
-    }
-
     const answer = useMemo(() => {
         if (showType === "calc") {
-            let result = fixNumber(eval(calculation.join("")))
+            const metrix = calculation
+            let result = eval($$.fixEvalString(metrix)) // fixEvalString might be 0, so eval result is undefined.
+            result = $$.fixNumber(result || 0)
 
-            return result || "0"
+            return result
         } else {
             return curVal
         }
     }, [showType, curVal, calculation])
 
+
+    // drag event
+
+
+
+    useEffect(() => {
+        $$.createDragableElement(containerRef.current)
+    }, [])
+
     return (
-        <div className="calculator-container">
+        <div ref={containerRef} className="calculator-container">
+
             <section className="result-section">
 
                 <span className="result-content" style={{ fontSize: answer.length > 8 ? `calc(3.8rem - ${answer.length * 1.2}px)` : "3.8rem" }}>
@@ -150,8 +147,8 @@ const Calculator: FC<Props> = (props) => {
             </section>
             <div className="calculator-btn-row">
                 <CircleButton className="gray-btn-theme" text="AC" onClick={cleanResult} />
-                <CircleButton className="gray-btn-theme" text="+/-" onClick={(e) => handleCalculate(e, MathSymbolEnum.reverse)} />
-                <CircleButton className="gray-btn-theme" text="%" onClick={() => { }} />
+                <CircleButton className="gray-btn-theme" text="+/-" onClick={(e) => { alert("not complete yet.") }} />
+                <CircleButton className="gray-btn-theme" text="%" onClick={(e) => { alert("not complete yet.") }} />
                 <CircleButton className="blue-btn-theme hl" text="÷" onClick={(e) => handleCalculate(e, MathSymbolEnum.divide)} />
             </div>
             <div className="calculator-btn-row">
@@ -177,7 +174,7 @@ const Calculator: FC<Props> = (props) => {
                 <CircleButton className="dark-btn-theme" text="." onClick={(e) => handleNumClick(e, ".")} />
                 <CircleButton className="blue-btn-theme" text="=" onClick={hanldeEqual} />
             </div>
-        </div>
+        </div >
     );
 };
 
