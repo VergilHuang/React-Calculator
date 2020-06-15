@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import "./style.sass";
 type Props = {
     className?: string;
-    text?: string;
+    text?: string | React.ReactNode;
     textColor?: string;
     backgroundColor?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;

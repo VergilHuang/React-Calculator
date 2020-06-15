@@ -3,7 +3,8 @@ import {
     faTimes,
     faPlus,
     faDivide,
-    faMinus
+    faMinus,
+    faEquals
 } from '@fortawesome/free-solid-svg-icons'
 
 export default function () {
@@ -11,6 +12,7 @@ export default function () {
         faTimes,
         faPlus,
         faDivide,
-        faMinus
+        faMinus,
+        faEquals
     );
 }
