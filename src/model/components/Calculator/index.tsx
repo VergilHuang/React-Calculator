@@ -9,11 +9,13 @@ import { StoreState } from '../../appRedux/reducers';
 import appActions from '../../appRedux/actions';
 import { Dispatch } from 'redux';
 
+type Props = React.HTMLAttributes<HTMLDivElement>
+
 const addOrMinus = [MathSymbolEnum.plus, MathSymbolEnum.minus]
 const divideOrMultiply = [MathSymbolEnum.divide, MathSymbolEnum.multiply]
 // const reverseOrPercent = [MathSymbolEnum.reverse, MathSymbolEnum.percent]
 
-const Calculator: FC = (props) => {
+const Calculator: FC<Props> = (props) => {
 
     const containerRef = useRef<any>()
     const curVal = useSelector<StoreState, string>(state => state.curVal);
@@ -124,20 +126,18 @@ const Calculator: FC = (props) => {
     }, [])
 
     return (
-        <div ref={containerRef} className="calculator-container">
+        <div ref={containerRef} {...props} className={`calculator-container ${props.className}`}>
 
             <section className="result-section">
-
                 <span className="result-content" style={{ fontSize: answer.length > 8 ? `calc(3.8rem - ${answer.length * 1.2}px)` : "3.8rem" }}>
                     {answer}
                 </span>
-
-                <span className="result-content" style={{ fontSize: curVal.length > 8 ? `calc(3.8rem - ${curVal.length * 1.2}px)` : "3.8rem" }}>
+                {/* <span className="result-content" style={{ fontSize: curVal.length > 8 ? `calc(3.8rem - ${curVal.length * 1.2}px)` : "3.8rem" }}>
                     {curVal}
-                </span>
-                <span className="result-content" style={{ fontSize: "1rem" }}>
+                </span> */}
+                {/* <span className="result-content" style={{ fontSize: "1rem" }}>
                     {`[${calculation.toString()}]`}
-                </span>
+                </span> */}
             </section>
             <div className="calculator-btn-row">
                 <CircleButton className="gray-btn-theme" text="AC" onClick={cleanResult} />
@@ -172,6 +172,7 @@ const Calculator: FC = (props) => {
     );
 };
 
+// 改用redux7版的hook
 // export default connect(
 //     (store: StoreState) => ({ calcVal: store.calcVal }),
 //     (dispatch: Dispatch) => bindActionCreators({ setCalcVal }, dispatch)

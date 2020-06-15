@@ -4,6 +4,7 @@ import 'reset-css';
 import "./assets/styles/global.sass";
 import { Provider } from 'react-redux';
 import store from './model/appRedux/store';
+import "./model/fontawsome";
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 

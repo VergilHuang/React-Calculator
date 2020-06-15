@@ -11,6 +11,11 @@
     top: 100px
     left: 100px
     padding: 8px 0
+    transform: scale(0)
+    transition: transform 0.25s ease-in-out
+    
+    &.show 
+        transform: scale(1)
 
     .result-section
         height: 165px

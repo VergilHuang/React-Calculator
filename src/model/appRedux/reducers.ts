@@ -2,6 +2,7 @@ import { ActionType, ActionCreatorReturnType } from './actions'
 import { MathSymbolEnum } from '../enums'
 
 export interface StoreState {
+	isMobile: boolean,
 	curVal: string,
 	calculation: string[],
 	symbol: MathSymbolEnum,
@@ -10,6 +11,7 @@ export interface StoreState {
 }
 
 const initialState: StoreState = {
+	isMobile: false,
 	curVal: "0",
 	calculation: [],
 	symbol: MathSymbolEnum.none,
@@ -19,6 +21,11 @@ const initialState: StoreState = {
 
 const reducers = (state = initialState, action: ActionCreatorReturnType) => {
 	switch (action.type) {
+		case ActionType.SET_IS_MOBILE:
+			return {
+				...state,
+				isMobile: action.payload
+			}
 		case ActionType.SET_CUR_VALUE:
 			return {
 				...state,
