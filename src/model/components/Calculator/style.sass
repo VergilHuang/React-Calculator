@@ -1,7 +1,7 @@
 @import src/assets/styles/theme_color
 
 .calculator-container
-    width: 360px
+    width: 480px
     // margin: 8px auto
     background: rgb(11,14,28)
     background: linear-gradient(0deg, rgba(11,14,28,1) 0%, rgba(132,186,255,1) 100%)
@@ -44,3 +44,6 @@
                 background-color: $white
                 color: $sea-blue
 
+@media screen and ( max-width: 768px )
+    .calculator-container
+        width: 360px

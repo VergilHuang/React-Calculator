@@ -1,36 +1,34 @@
-import React, { FC, useState, useMemo, useRef, useEffect } from 'react';
+import React, { FC, useMemo, useRef, useEffect } from 'react';
 import "./style.sass"
 import CircleButton from '../CircleButton';
 import $$ from '../../utils/utils';
-import { connect } from 'react-redux';
-import { StoreState } from '../../appRedux/reducers';
-import { bindActionCreators, Dispatch } from 'redux';
-import { setCalcVal } from '../../appRedux/actions';
 import { MathSymbolEnum } from '../../enums';
 import RaiusBarButton from '../RadiusBarButton';
-type Props = {
-    // calcVal: string;
-    // setCalcVal: typeof setCalcVal;
-}
+import { useSelector, useDispatch } from 'react-redux';
+import { StoreState } from '../../appRedux/reducers';
+import appActions from '../../appRedux/actions';
+import { Dispatch } from 'redux';
 
 const addOrMinus = [MathSymbolEnum.plus, MathSymbolEnum.minus]
 const divideOrMultiply = [MathSymbolEnum.divide, MathSymbolEnum.multiply]
-const reverseOrPercent = [MathSymbolEnum.reverse, MathSymbolEnum.percent]
+// const reverseOrPercent = [MathSymbolEnum.reverse, MathSymbolEnum.percent]
 
-const Calculator: FC<Props> = (props) => {
+const Calculator: FC = (props) => {
 
     const containerRef = useRef<any>()
-    const [curVal, setCurVal] = useState<string>("0");
-    const [calculation, setCalculation] = useState<string[]>([]);
-    const [symbol, setSymbol] = useState<MathSymbolEnum>(MathSymbolEnum.none);
-    const [flag, setFlag] = useState(false);
-    const [showType, setShowType] = useState<"calc" | "cur">("cur")
+    const curVal = useSelector<StoreState, string>(state => state.curVal);
+    const calculation = useSelector<StoreState, string[]>(state => state.calculation);
+    const symbol = useSelector<StoreState, MathSymbolEnum>(state => state.symbol);
+    const flag = useSelector<StoreState, boolean>(state => state.flag);
+    const showType = useSelector<StoreState, "cur" | "calc">(state => state.showType)
+
+    const dispatch = useDispatch<Dispatch<any>>();
 
     //數字點擊
     const handleNumClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, numStr: string) => {
 
         if (symbol === MathSymbolEnum.equal) {
-            setCalculation([])
+            dispatch(appActions.setCalculation([]))
         }
 
         let val = curVal;
@@ -42,13 +40,13 @@ const Calculator: FC<Props> = (props) => {
             val = "0"
             // 按下數字的時候將運算符號儲存
             if (symbol === MathSymbolEnum.plus)
-                setCalculation([...calculation, "+"])
+                dispatch(appActions.setCalculation([...calculation, "+"]))
             if (symbol === MathSymbolEnum.minus)
-                setCalculation([...calculation, "-"])
+                dispatch(appActions.setCalculation([...calculation, "-"]))
             if (symbol === MathSymbolEnum.multiply)
-                setCalculation([...calculation, "*"])
+                dispatch(appActions.setCalculation([...calculation, "*"]))
             if (symbol === MathSymbolEnum.divide)
-                setCalculation([...calculation, "/"])
+                dispatch(appActions.setCalculation([...calculation, "/"]))
         }
 
         // 容許計算長度為９個數字，包含小數點為１０位
@@ -57,20 +55,20 @@ const Calculator: FC<Props> = (props) => {
             val = $$.filterZeroHead(val)
         }
 
-        setCurVal(val)
-        setShowType("cur")
-        setSymbol(MathSymbolEnum.number);
-        setFlag(false);
+        dispatch(appActions.setCurVal(val))
+        dispatch(appActions.setShowType("cur"))
+        dispatch(appActions.setSymbol(MathSymbolEnum.number));
+        dispatch(appActions.setFlag(false));
     }
 
     // AC
     const cleanResult = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         $$.preventDefault(e)
 
-        setCurVal("0")
-        setCalculation([])
-        setSymbol(MathSymbolEnum.clean)
-        setFlag(false);
+        dispatch(appActions.setCurVal("0"))
+        dispatch(appActions.setCalculation([]))
+        dispatch(appActions.setSymbol(MathSymbolEnum.clean))
+        dispatch(appActions.setFlag(false))
     }
 
     // 加減乘除
@@ -78,18 +76,18 @@ const Calculator: FC<Props> = (props) => {
         $$.preventDefault(e)
 
         if (addOrMinus.includes(ms)) {
-            setShowType("calc")
+            dispatch(appActions.setShowType("calc"))
         }
         else if (divideOrMultiply.includes(ms)) {
-            setShowType("cur")
+            dispatch(appActions.setShowType("cur"))
         }
 
         if (symbol === MathSymbolEnum.number) {
-            setCalculation([...calculation, curVal])
+            dispatch(appActions.setCalculation([...calculation, curVal]))
         }
 
-        setFlag(true);
-        setSymbol(ms);
+        dispatch(appActions.setFlag(true));
+        dispatch(appActions.setSymbol(ms));
     }
 
     const hanldeEqual = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -100,11 +98,11 @@ const Calculator: FC<Props> = (props) => {
         result = $$.fixNumber(result);
 
         if (result) {
-            setCalculation([result]);
-            setCurVal("");
-            setShowType("calc");
-            setFlag(false);
-            setSymbol(MathSymbolEnum.equal)
+            dispatch(appActions.setCalculation([result]));
+            dispatch(appActions.setCurVal(""));
+            dispatch(appActions.setShowType("calc"));
+            dispatch(appActions.setFlag(false));
+            dispatch(appActions.setSymbol(MathSymbolEnum.equal))
         }
     }
 
@@ -119,10 +117,6 @@ const Calculator: FC<Props> = (props) => {
             return curVal
         }
     }, [showType, curVal, calculation])
-
-
-    // drag event
-
 
 
     useEffect(() => {
@@ -178,7 +172,9 @@ const Calculator: FC<Props> = (props) => {
     );
 };
 
-export default connect(
-    (store: StoreState) => ({ calcVal: store.calcVal }),
-    (dispatch: Dispatch) => bindActionCreators({ setCalcVal }, dispatch)
-)(Calculator);
+// export default connect(
+//     (store: StoreState) => ({ calcVal: store.calcVal }),
+//     (dispatch: Dispatch) => bindActionCreators({ setCalcVal }, dispatch)
+// )(Calculator);
+
+export default Calculator

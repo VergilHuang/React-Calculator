@@ -1,21 +1,48 @@
 import { ActionType, ActionCreatorReturnType } from './actions'
+import { MathSymbolEnum } from '../enums'
 
 export interface StoreState {
-	calcVal: string,
-
+	curVal: string,
+	calculation: string[],
+	symbol: MathSymbolEnum,
+	flag: boolean,
+	showType: "calc" | "cur"
 }
 
 const initialState: StoreState = {
-	calcVal: "0",
-
+	curVal: "0",
+	calculation: [],
+	symbol: MathSymbolEnum.none,
+	flag: false,
+	showType: "cur"
 }
 
 const reducers = (state = initialState, action: ActionCreatorReturnType) => {
 	switch (action.type) {
-		case ActionType.SET_CALC_VALUE:
+		case ActionType.SET_CUR_VALUE:
 			return {
 				...state,
-				calcVal: action.payload
+				curVal: action.payload
+			}
+		case ActionType.SET_CALCULATION:
+			return {
+				...state,
+				calculation: action.payload
+			}
+		case ActionType.SET_SYMBOL:
+			return {
+				...state,
+				symbol: action.payload
+			}
+		case ActionType.SET_FLAG:
+			return {
+				...state,
+				flag: action.payload
+			}
+		case ActionType.SET_ShowType:
+			return {
+				...state,
+				showType: action.payload
 			}
 		default:
 			return state
