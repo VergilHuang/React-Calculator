@@ -8,6 +8,7 @@ import fontawsome from "./model/fontawsome";
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 
+// init fontawsome
 fontawsome()
 
 ReactDOM.render(
